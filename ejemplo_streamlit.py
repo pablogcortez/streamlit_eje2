@@ -1,9 +1,37 @@
 import streamlit as st
 import pandas as pd
-import numpy as np
 
+# Función para verificar las credenciales
+def verificar_credenciales(username, password):
+    # Cargar el archivo Excel desde GitHub
+    df_credenciales = pd.read_excel("https://raw.githubusercontent.com/tu_usuario/tu_repositorio/tu_rama/credenciales.xlsx")
+    
+    # Verificar si las credenciales coinciden
+    if (df_credenciales["Username"] == username) & (df_credenciales["Password"] == password)).any():
+        return True
+    else:
+        return False
 
+# Función principal
 def main():
+    # Título de la página
+    st.title("Inicio de Sesión")
+
+    # Obtener credenciales del usuario
+    username = st.text_input("Usuario")
+    password = st.text_input("Contraseña", type="password")
+
+    # Botón de inicio de sesión
+    if st.button("Iniciar Sesión"):
+        if verificar_credenciales(username, password):
+            st.success("Inicio de sesión exitoso!")
+            # Ejecutar el código principal si las credenciales son correctas
+            run_main_app()
+        else:
+            st.error("Credenciales incorrectas. Por favor, inténtalo de nuevo.")
+
+# Código principal de la aplicación
+def run_main_app():
     # Configuración de la página
     st.set_page_config(
         page_title="Cargar archivo - Mi Aplicación",
@@ -11,42 +39,10 @@ def main():
         layout="wide"
     )
 
-    # Título de la página
-    st.title("Cargar archivo en Streamlit")
+    # Resto del código principal...
+    # (Aquí iría tu código original)
+    # ...
 
-    # Widget para cargar el archivo
-    uploaded_file = st.file_uploader("Cargar archivo CSV", type=["csv"])
-
-    # Separador
-    st.markdown("---")
-
-    if uploaded_file is not None:
-        # Leer el archivo en un DataFrame de Pandas
-        df = pd.read_csv(uploaded_file)
-
-        # Convertir la columna de fecha a tipo datetime
-        df["FECHA"] = pd.to_datetime(df["FECHA"])
-
-        ## Mostrar el DataFrame
-        # st.write("Contenido del archivo:")
-        # st.dataframe(df)
-
-        # Filtro por fecha
-        st.sidebar.subheader("Filtrar por Fecha")
-        start_date = pd.to_datetime(st.sidebar.date_input("Fecha de inicio", min(df["FECHA"])))
-        end_date = pd.to_datetime(st.sidebar.date_input("Fecha de fin", max(df["FECHA"])))
-
-        # Filtrar los datos según el rango de fechas seleccionado
-        filtered_df = df[(df["FECHA"] >= start_date) & (df["FECHA"] <= end_date)]
-
-        # Mostrar los datos filtrados
-        st.write("Datos filtrados por fecha:")
-        st.dataframe(filtered_df)
-
-        # Gráfico de barras
-        st.subheader("Gráfico de Barras - ACUMULADA PROMEDIO")
-        st.bar_chart(filtered_df["ACUMULADA PROMEDIO"])
-
-
+# Ejecutar la aplicación
 if __name__ == "__main__":
     main()
