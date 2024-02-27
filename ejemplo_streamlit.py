@@ -4,7 +4,7 @@ import pandas as pd
 # Función para verificar las credenciales
 def verificar_credenciales(username, password):
     # Cargar el archivo Excel desde GitHub
-    df_credenciales = pd.read_excel("https://raw.githubusercontent.com/tu_usuario/tu_repositorio/tu_rama/credenciales.xlsx")
+    df_credenciales = pd.read_excel("https://github.com/pablogcortez/streamlit_eje2/edit/main/credenciales.xlsx")
     
     # Verificar si las credenciales coinciden
     if (df_credenciales["Username"] == username) & (df_credenciales["Password"] == password)).any():
